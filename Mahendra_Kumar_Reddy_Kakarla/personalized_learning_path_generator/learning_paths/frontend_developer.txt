@@ -1,0 +1,82 @@
+**1. Title of Learning Path:** Front-End Developer Mastery
+
+**2. Steps to Learn the Path:**
+
+**Step 1: HTML Fundamentals**
+
+* **Title:** Building Strong HTML Foundations
+* **Description:** Lay the cornerstone of your front-end skills by studying HTML syntax, structure, and best practices.
+
+* **Sub-Steps:**
+    * **HTML Basics:**
+        * Tutorial: https://developer.mozilla.org/en-US/docs/Learn/HTML/Introduction_to_HTML
+        * Book: "HTML and CSS: Design and Build Websites" by Jon Duckett
+        * Website: https://www.w3schools.com/html/
+    * **HTML5 Features:**
+        * Course: https://www.coursera.org/specializations/html5-css3-javascript
+        * Tutorial: https://www.tutorialspoint.com/html5/
+        * Website: https://www.w3.org/TR/html5/
+
+**Step 2: CSS Styling Essentials**
+
+* **Title:** Mastering CSS for Visual Excellence
+* **Description:** Enhance your HTML structures with CSS, learning to manipulate elements, control typography, and create visually appealing designs.
+
+* **Sub-Steps:**
+    * **CSS Basics:**
+        * Tutorial: https://www.w3schools.com/css/
+        * Book: "CSS: The Complete Guide" by Leonardo Faria
+        * Website: https://developer.mozilla.org/en-US/docs/Web/CSS
+    * **Advanced CSS Techniques:**
+        * Course: https://www.pluralsight.com/courses/css-advanced
+        * Tutorial: https://css-tricks.com/advanced-css-techniques/
+        * Website: https://www.smashingmagazine.com/category/css/
+
+**Step 3: JavaScript Programming**
+
+* **Title:** Unleashing JavaScript's Dynamic Capabilities
+* **Description:** Add interactivity and dynamic functionality to your web applications by mastering JavaScript fundamentals and advanced concepts.
+
+* **Sub-Steps:**
+    * **JavaScript Basics:**
+        * Tutorial: https://www.codecademy.com/learn/learn-javascript
+        * Book: "JavaScript for Beginners" by Ethan Brown
+        * Website: https://javascript.info/
+    * **Object-Oriented JavaScript (OOP):**
+        * Course: https://www.udemy.com/course/javascript-object-oriented-programming/
+        * Tutorial: https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/Introduction
+        * Website: https://www.freecodecamp.org/news/object-oriented-javascript/
+
+**Step 4: Front-End Frameworks and Libraries**
+
+* **Title:** Enhancing Development with Front-End Tools
+* **Description:** Utilize popular frameworks like Bootstrap, React, and jQuery to streamline your workflow, create responsive designs, and improve code efficiency.
+
+* **Sub-Steps:**
+    * **Bootstrap:**
+        * Tutorial: https://getbootstrap.com/docs/4.6/getting-started/introduction/
+        * Book: "Bootstrap 4: Up & Running" by Peter Lubbers
+        * Website: https://www.w3schools.com/bootstrap4/
+    * **React:**
+        * Course: https://www.coursera.org/specializations/react
+        * Tutorial: https://reactjs.org/docs/getting-started.html
+        * Website: https://facebook.github.io/react/
+    * **jQuery:**
+        * Tutorial: https://learn.jquery.com/
+        * Book: "jQuery Pocket Reference" by David Geary
+        * Website: https://api.jquery.com/
+
+**Step 5: Testing and Deployment**
+
+* **Title:** Ensuring Quality and Seamless Deployment
+* **Description:** Learn techniques for testing, debugging, and deploying your front-end applications to ensure their reliability and accessibility.
+
+* **Sub-Steps:**
+    * **Unit Testing:**
+        * Tutorial: https://jestjs.io/docs/getting-started
+        * Book: "Jest: The Complete Guide" by Dave Ceddia
+        * Website: https://www.npmjs.com/package/jest
+    * **Deployment Techniques:**
+        * Tutorial: https://www.digitalocean.com/community/tutorials/how-to-deploy-a-nodejs-application-on-a-vps
+        * Book: "Deploying Node.js Applications" by Nader Dabit
+        * Website: https://www.heroku.com/nodejs

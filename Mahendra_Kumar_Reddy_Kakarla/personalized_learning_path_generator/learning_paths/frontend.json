@@ -1,0 +1,133 @@
+{
+    "steps": [
+        {
+            "title": "Step 1: Build foundational web development skills",
+            "description": "Develop a strong understanding of the core technologies used in web development, including HTML, CSS, and Bootstrap.",
+            "tasks": [
+                {
+                    "title": "Task 1: Study HTML",
+                    "description": "Learn the basics of HTML, including structure, elements, and tags. Practice creating simple web pages.",
+                    "resources": [
+                        "Resource 1: HTML Tutorial - W3Schools: https://www.w3schools.com/html/",
+                        "Resource 2: Learn HTML | MDN: https://developer.mozilla.org/en-US/docs/Learn/Getting_started_with_the_web/HTML"
+                    ],
+                    "completed": true
+                },
+                {
+                    "title": "Task 2: Practice CSS",
+                    "description": "Study CSS to control the appearance of web pages. Learn about selectors, properties, and values. Practice styling web pages.",
+                    "resources": [
+                        "Resource 1: CSS Tutorial - W3Schools: https://www.w3schools.com/css/",
+                        "Resource 2: CSS: Cascading Style Sheets | MDN: https://developer.mozilla.org/en-US/docs/Web/CSS"
+                    ],
+                    "completed": false
+                },
+                {
+                    "title": "Task 3: Utilize Bootstrap",
+                    "description": "Learn to use Bootstrap, a popular front-end framework, to create responsive and mobile-friendly web pages.",
+                    "resources": [
+                        "Resource 1: Getting started with Bootstrap: https://getbootstrap.com/docs/5.2/getting-started/",
+                        "Resource 2: Bootstrap Tutorial - W3Schools: https://www.w3schools.com/bootstrap5/"
+                    ],
+                    "completed": false
+                }
+            ]
+        },
+        {
+            "title": "Step 2: Enhance JavaScript skills",
+            "description": "Develop your JavaScript abilities to add interactivity and dynamic elements to web pages. Learn about data types, variables, functions, and event handling.",
+            "tasks": [
+                {
+                    "title": "Task 1: Study JavaScript basics",
+                    "description": "Understand the fundamentals of JavaScript, including syntax, data types, and operators. Practice writing simple JavaScript programs.",
+                    "resources": [
+                        "Resource 1: JavaScript Tutorial - W3Schools: https://www.w3schools.com/js/",
+                        "Resource 2: JavaScript | MDN: https://developer.mozilla.org/en-US/docs/Web/JavaScript"
+                    ],
+                    "completed": false
+                },
+                {
+                    "title": "Task 2: Practice JavaScript functions",
+                    "description": "Learn to use functions in JavaScript to encapsulate code, pass arguments, and return values. Practice writing and calling JavaScript functions.",
+                    "resources": [
+                        "Resource 1: Functions in JavaScript - W3Schools: https://www.w3schools.com/js/js_functions.asp",
+                        "Resource 2: Functions - JavaScript | MDN: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions"
+                    ],
+                    "completed": false
+                },
+                {
+                    "title": "Task 3: Utilize JavaScript event handling",
+                    "description": "Learn how to use JavaScript event handling to respond to user interactions, such as clicks, mouse movements, and form submissions.",
+                    "resources": [
+                        "Resource 1: Event Handling in JavaScript - W3Schools: https://www.w3schools.com/js/js_events.asp",
+                        "Resource 2: Event handling - JavaScript | MDN: https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener"
+                    ],
+                    "completed": false
+                }
+            ]
+        },
+        {
+            "title": "Step 3: Gain experience with React",
+            "description": "Learn about React, a popular JavaScript library for building user interfaces. Understand components, state management, and lifecycle methods.",
+            "tasks": [
+                {
+                    "title": "Task 1: Study React basics",
+                    "description": "Understand the fundamental concepts of React, including components, props, and state. Practice creating simple React applications.",
+                    "resources": [
+                        "Resource 1: Getting Started - React: https://reactjs.org/docs/getting-started.html",
+                        "Resource 2: React Tutorial - W3Schools: https://www.w3schools.com/react/"
+                    ],
+                    "completed": false
+                },
+                {
+                    "title": "Task 2: Practice React state management",
+                    "description": "Learn about state management in React, including useState, useEffect, and Redux. Practice managing state in React applications.",
+                    "resources": [
+                        "Resource 1: State Management in React - React: https://reactjs.org/docs/state-management.html",
+                        "Resource 2: State Management with React and Redux - freeCodeCamp.org: https://www.freecodecamp.org/news/react-state-management-with-redux/"
+                    ],
+                    "completed": false
+                },
+                {
+                    "title": "Task 3: Build a React portfolio project",
+                    "description": "Create a portfolio project using React to showcase your skills and demonstrate your understanding of React concepts.",
+                    "resources": [],
+                    "completed": false
+                }
+            ]
+        },
+        {
+            "title": "Step 4: Enhance portfolio and apply for jobs",
+            "description": "Build a portfolio of your work to showcase your abilities and apply for front-end developer positions that align with your interests.",
+            "tasks": [
+                {
+                    "title": "Task 1: Create a portfolio website",
+                    "description": "Create a website that showcases your skills, projects, and resume. Use your portfolio to demonstrate your abilities as a front-end developer.",
+                    "resources": [
+                        "Resource 1: How to Create a Portfolio Website for Developers: https://www.freecodecamp.org/news/how-to-create-a-portfolio-website/",
+                        "Resource 2: 10 Tips for Creating a Strong Developer Portfolio: https://www.toptal.com/developers/how-to-build-developer-portfolio"
+                    ],
+                    "completed": false
+                },
+                {
+                    "title": "Task 2: Research and apply for jobs",
+                    "description": "Identify front-end developer positions that match your skills and interests. Tailor your resume and cover letter to each specific job application.",
+                    "resources": [
+                        "Resource 1: Where to Find Frontend Developer Jobs: https://www.codementor.io/blog/where-to-find-frontend-developer-jobs",
+                        "Resource 2: How to Write a Frontend Developer Resume and Cover Letter: https://www.freecodecamp.org/news/how-to-write-a-front-end-developer-resume-and-cover-letter/"
+                    ],
+                    "completed": false
+                },
+                {
+                    "title": "Task 3: Prepare for technical interviews",
+                    "description": "Practice answering common front-end developer interview questions and prepare to demonstrate your technical skills during interviews.",
+                    "resources": [
+                        "Resource 1: Front-End Developer Interview Questions and Answers: https://www.interviewbit.com/blog/front-end-developer-interview-questions/",
+                        "Resource 2: How to Prepare for a Front-End Developer Interview: https://www.codementor.io/blog/how-to-prepare-for-a-front-end-developer-interview"
+                    ],
+                    "completed": false
+                }
+            ]
+        }
+    ]
+}
