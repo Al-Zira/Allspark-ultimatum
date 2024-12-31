@@ -7,6 +7,7 @@ WORKDIR /app
 # Copy the requirements file and the script into the container
 COPY requirements.txt ./
 COPY product_description.py ./
+COPY .dockerignore ./
 
 # Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
