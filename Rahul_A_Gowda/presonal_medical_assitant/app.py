@@ -182,9 +182,9 @@ class MedicalApp:
 if __name__ == "__main__":
     load_dotenv()
     
-    neo4j_url = os.getenv("NEO4J_URL", "neo4j+s://4cc743c4.databases.neo4j.io")
+    neo4j_url = os.getenv("NEO4J_URL", "<enter yours>")
     neo4j_username = os.getenv("NEO4J_USERNAME", "neo4j")
-    neo4j_password = os.getenv("NEO4J_PASSWORD", "i4KWVEy2TBVJD4HtCTLiq5MLjM8uVtq_jMAd4W6j8OM")
+    neo4j_password = os.getenv("NEO4J_PASSWORD", "<enter yours>")
     connector = Neo4jConnector(neo4j_url, neo4j_username, neo4j_password)
 
     llm = ChatGroq(model="llama3-8b-8192")
