@@ -196,3 +196,4 @@ cython_debug/
 .pypirc
 
 
+.idx/dev.nix
