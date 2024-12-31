@@ -57,9 +57,10 @@ class FRIDAY:
             # Invoke the model and stream the response
             async for chunk in with_message_history.astream([HumanMessage(content=user_input)], config=config):
                 parsed_output = self.output_parser.parse(chunk.content)
-                cleaned_output = parsed_output.replace("*", "").strip()  # Remove asterisks and extra whitespace
-                print(cleaned_output, end="", flush=True)
-            print() # Print a newline after the complete response
+                cleaned_output = parsed_output.replace("*", "").replace("\n", " ").strip()  # Remove asterisks, newlines, and extra whitespace
+                structured_output = " ".join(cleaned_output.split())  # Ensure consistent spacing
+                print(structured_output, end=" ", flush=True)
+            print()  # Print a newline after the complete response
 
 if __name__ == "__main__":
     import asyncio
