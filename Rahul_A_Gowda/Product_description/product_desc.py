@@ -31,24 +31,19 @@ class FRIDAY:
         Based on the product details provided by the user, create clear, engaging, and concise descriptions.
         Ask any necessary questions to clarify product details before generating the description.
         Respond only with the product description, and ensure it aligns with any specified parameters.
+        Do not provide any other information other than product description
         I'm {self.user_name}.
         """),MessagesPlaceholder(variable_name="thinking")
         ])
         return prompt | self.model  # Combine prompt and model into a chain
 
-    def additional_step(self, response_content: str) -> str:
-        """An example additional step to chain more logic after model's response."""
-        # Let's assume we want to post-process or format the response here.
-        # You can add any extra functionality here (e.g., formatting, logging, filtering, etc.).
-        return f"{response_content}"
-
-    def chat(self):
-        """Main chat loop to handle user input and generate responses."""
+    async def chat(self):
+        """Main chat loop to handle user input and generate streaming responses."""
         bot_name = "FRIDAY"
         chain = self.setup_chain()  # Setting up the chain
         with_message_history = RunnableWithMessageHistory(chain, self.get_session_history)
-        print(f"{bot_name}: hey {self.user_name}, how can I help you today?\n")
-        
+        print(f"{bot_name}: Hey {self.user_name}, how can I help you today?\n")
+
         while True:
             user_input = input("you: ")
             if user_input.lower() in ['exit', 'quit', 'bye']:
@@ -56,19 +51,17 @@ class FRIDAY:
                 break
 
             config = {"configurable": {"session_id": self.user_name}}
-            
-            # Invoke the model and get the response
-            response = with_message_history.invoke([HumanMessage(content=user_input)], config=config)
-            
-            # Parse the response content after getting it
-            parsed_output = self.output_parser.parse(response.content)
-            
-            # Pass the parsed output to an additional step in the chain
-            final_output = self.additional_step(parsed_output)
-            
-            # Display the final output
-            print(f"{bot_name}: {final_output}")
+
+            print(f"{bot_name}: ", end="", flush=True)
+
+            # Invoke the model and stream the response
+            async for chunk in with_message_history.astream([HumanMessage(content=user_input)], config=config):
+                parsed_output = self.output_parser.parse(chunk.content)
+                cleaned_output = parsed_output.replace("*", "").strip()  # Remove asterisks and extra whitespace
+                print(cleaned_output, end="", flush=True)
+            print() # Print a newline after the complete response
 
 if __name__ == "__main__":
+    import asyncio
     bot = FRIDAY()
-    bot.chat()
+    asyncio.run(bot.chat())
