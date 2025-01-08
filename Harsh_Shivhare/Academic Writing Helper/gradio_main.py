@@ -9,6 +9,7 @@ import gradio as gr
 load_dotenv()
 
 api_key = os.getenv('GOOGLE_API_KEY')
+print(api_key)
 
 # Create an instance of the LLM
 llm = GoogleGenerativeAI(model='gemini-pro', temperature=0.9, api_key=api_key)
