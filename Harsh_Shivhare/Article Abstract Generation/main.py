@@ -2,18 +2,17 @@ import os
 from dotenv import load_dotenv
 from langchain_google_genai import GoogleGenerativeAI
 from langchain_core.prompts import PromptTemplate
-from langchain.chains import LLMChain
 from langchain_core.output_parsers import StrOutputParser
 import os
 import warnings
-import absl.logging
+# import absl.logging
 
 # Suppress GRPC warnings
-os.environ["GRPC_VERBOSITY"] = "ERROR"
-os.environ["GRPC_LOG_SEVERITY_LEVEL"] = "ERROR"
+# os.environ["GRPC_VERBOSITY"] = "ERROR"
+# os.environ["GRPC_LOG_SEVERITY_LEVEL"] = "ERROR"
 
-# Suppress Abseil logs
-absl.logging.set_verbosity("error")
+# # Suppress Abseil logs
+# absl.logging.set_verbosity("error")
 
 # Suppress general warnings (optional)
 warnings.filterwarnings("ignore")
