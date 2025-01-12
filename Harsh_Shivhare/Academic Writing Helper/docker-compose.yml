@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  ultimatum:
+    image: ultimatum
+    build:
+      context: .
+      dockerfile: ./Dockerfile
