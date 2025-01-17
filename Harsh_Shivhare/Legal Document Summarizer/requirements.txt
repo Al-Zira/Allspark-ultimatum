@@ -1,0 +1,10 @@
+langchain_community
+langchain
+python-dotenv
+langchain_core
+langchain_google_genai
+torch>=1.9.0,<2.0.0
+easyocr==1.7.2
+opencv-python
+PyPDF2
+numpy
