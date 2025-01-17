@@ -1,255 +1,215 @@
 import os
-import gradio as gr
-import pandas as pd
+import uuid
+import asyncio
+from typing import List, AsyncGenerator
 from PyPDF2 import PdfReader
-from langchain.document_loaders import PyPDFLoader
+import re
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain_google_genai import GoogleGenerativeAI
 from langchain.prompts import PromptTemplate
-from langchain.schema import Document
 from langchain_pinecone import Pinecone
 from pinecone import Pinecone as PineconeClient
+from langchain.schema import Document
+from langchain_core.messages import AIMessageChunk, HumanMessage
+from langgraph.checkpoint.memory import MemorySaver
+from langgraph.graph import START, MessagesState, StateGraph
 from dotenv import load_dotenv
-from langchain.chains import StuffDocumentsChain, LLMChain
 import warnings
-from typing import Tuple, List, Optional
-from dataclasses import dataclass
 warnings.filterwarnings("ignore")
 
-@dataclass
-class Config:
-    """Configuration class for API keys and settings"""
-    GOOGLE_API_KEY: str
-    PINECONE_API_KEY: str
-    PINECONE_INDEX_NAME: str = "aizira"
-    PINECONE_ENVIRONMENT: str = "us-east-1"
-    EMBEDDING_MODEL: str = 'sentence-transformers/all-MiniLM-L6-v2'
-    LLM_MODEL: str = 'gemini-pro'
-    CHUNK_SIZE: int = 500
-    CHUNK_OVERLAP: int = 50
-    TOP_K_RESULTS: int = 5
-
-class DocumentProcessor:
-    def __init__(self, config: Config):
-        self.config = config
-        # Initialize embeddings
-        self.embeddings = HuggingFaceEmbeddings(model_name=config.EMBEDDING_MODEL)
+class CustomerServiceBot:
+    def __init__(self, pdf_path: str):
+        load_dotenv()
         
-        # Initialize Pinecone client
-        self.pinecone_client = PineconeClient(api_key=config.PINECONE_API_KEY)
+        # Initialize configurations
+        self.google_api_key = os.getenv("GOOGLE_API_KEY")
+        self.pinecone_api_key = os.getenv("PINECONE_API_KEY")
+        self.pinecone_environment = "us-east-1"
+        self.index_name = "aizira"
+        self.namespace = "default"
         
-        # Initialize LangChain's Pinecone vector store
-        self.vector_store = Pinecone(
-            embedding=self.embeddings,
-            index_name=config.PINECONE_INDEX_NAME
+        if not all([self.google_api_key, self.pinecone_api_key]):
+            raise ValueError("Please set all required API keys in .env file")
+            
+        # Initialize Pinecone
+        self.pinecone_client = PineconeClient(api_key=self.pinecone_api_key)
+        
+        # Initialize components
+        self.embeddings = HuggingFaceEmbeddings(
+            model_name='sentence-transformers/all-MiniLM-L6-v2'
         )
         
+        # Initialize LLM with streaming
         self.llm = GoogleGenerativeAI(
-            model=config.LLM_MODEL,
+            model="gemini-pro",
+            google_api_key=self.google_api_key,
             temperature=0.7,
-            api_key=config.GOOGLE_API_KEY
+            streaming=True
         )
         
         self.text_splitter = RecursiveCharacterTextSplitter(
-            chunk_size=config.CHUNK_SIZE,
-            chunk_overlap=config.CHUNK_OVERLAP,
+            chunk_size=1500,
+            chunk_overlap=200,
             length_function=len,
-            separators=["\n\n", "\n", ".", "!", "?", ",", " ", ""],
-            keep_separator=True
-        )
-
-    def check_namespace(self, namespace: str) -> bool:
-        """Check if a namespace exists in the Pinecone index."""
-        try:
-            index = self.pinecone_client.Index(self.config.PINECONE_INDEX_NAME)
-            stats = index.describe_index_stats()
-            return namespace in stats.get('namespaces', {})
-        except Exception as e:
-            raise ValueError(f"Error checking namespace: {e}")
-
-    def process_pdf(self, file_obj) -> Document:
-        """Process PDF file and return Document object"""
-        try:
-            pdf_reader = PdfReader(file_obj)
-            text = " ".join(page.extract_text() for page in pdf_reader.pages)
-            return Document(page_content=text, metadata={"source": file_obj.name})
-        except Exception as e:
-            raise ValueError(f"Error processing PDF: {e}")
-
-    def process_csv(self, file_obj) -> Document:
-        """Process CSV file and return Document object"""
-        try:
-            df = pd.read_csv(file_obj)
-            text = "\n".join(
-                f"{col}: {value}" 
-                for _, row in df.iterrows() 
-                for col, value in row.items()
-            )
-            return Document(page_content=text, metadata={"source": file_obj.name})
-        except Exception as e:
-            raise ValueError(f"Error processing CSV: {e}")
-
-    def create_vector_store(self, docs: List[Document], namespace: str) -> Pinecone:
-        """Create or update vector store with documents"""
-        try:
-            vector_store = Pinecone.from_documents(
-                documents=docs,
-                embedding=self.embeddings,
-                index_name=self.config.PINECONE_INDEX_NAME,
-                namespace=namespace
-            )
-            return vector_store
-        except Exception as e:
-            raise ValueError(f"Error creating vector store: {e}")
-
-class ChatBot:
-    def __init__(self, config: Config):
-        self.config = config
-        self.processor = DocumentProcessor(config)
-        self.docsearch = None
-        self.namespace = None
-        self._setup_prompts()
-
-    def _setup_prompts(self):
-        """Initialize prompt templates"""
-        self.document_prompt = PromptTemplate(
-            template="{page_content}",
-            input_variables=["page_content"]
+            separators=["\n\n", "\n", ".", "!", "?", ",", " ", ""]
         )
         
-        self.main_prompt = PromptTemplate(
-            template="""
-            You are a Conversational Data Query Assistant, designed to help users extract and analyze specific information from datasets or logs based on the provided context.
+        # Initialize vector store
+        self.vector_store = self.process_pdf(pdf_path)
+        
+        # Initialize LangGraph components
+        self.workflow = StateGraph(state_schema=MessagesState)
+        self.memory = MemorySaver()
+        self.setup_graph()
+        
+        self.PROMPT = PromptTemplate(
+            template="""You are a Conversational Data Query Assistant. Please answer the following question using the provided context.
 
-            Question: {question}
-            Context: {context}
+                    Question: {question}
 
-            Provide a comprehensive and precise answer based on the given context. If the context does not contain sufficient information to answer the question, clearly state that the answer cannot be found in the provided document.
-            """,
-            input_variables=["context", "question"]
+                    Context: {context}
+
+                    Your response should be clear, detailed, and in a natural, engaging conversational tone. 
+                    Make sure to use the context effectively to provide an accurate answer.""",
+            input_variables=["question", "context"]
         )
 
-    def upload_file(self, file) -> str:
-        """Process uploaded file and initialize vector store"""
-        if file is None:
-            return "Please upload a file first."
-        
-        try:
-            self.namespace = os.path.splitext(file.name)[0]
+    def setup_graph(self):
+        def process_query(state: MessagesState):
+            # Get the latest message
+            current_query = state["messages"][-1].content
             
-            if self.processor.check_namespace(self.namespace):
-                self.docsearch = Pinecone(
-                    index_name=self.config.PINECONE_INDEX_NAME,
-                    embedding=self.processor.embeddings,
-                    namespace=self.namespace
-                )
-                return f"Using existing namespace: {self.namespace}"
-            
-            # Process document based on file type
-            doc = (self.processor.process_pdf(file) 
-                  if file.name.endswith('.pdf') 
-                  else self.processor.process_csv(file))
-            
-            # Split document into chunks
-            docs = self.processor.text_splitter.split_documents([doc])
-            
-            # Create vector store
-            self.docsearch = self.processor.create_vector_store(docs, self.namespace)
-            return f"Successfully processed {len(docs)} chunks from {file.name}"
-            
-        except Exception as e:
-            return f"Error processing file: {str(e)}"
-
-    def respond(self, message: str, history: List) -> str:
-        """Generate response to user query"""
-        if self.docsearch is None:
-            return "Please upload a document first."
-        
-        try:
-            # Retrieve relevant documents
-            retriever = self.docsearch.as_retriever(
-                search_type="similarity",
-                search_kwargs={"k": self.config.TOP_K_RESULTS},
+            # Use vector store to get relevant context
+            retriever = self.vector_store.as_retriever(
+                search_kwargs={"k": 3},
                 namespace=self.namespace
             )
-            documents = retriever.get_relevant_documents(message)
+            docs = retriever.get_relevant_documents(current_query)
+            context = "\n".join([doc.page_content for doc in docs])
             
-            if not documents:
-                return "No relevant documents found for this query."
-            
-            # Generate response using LLM chain
-            llm_chain = LLMChain(llm=self.processor.llm, prompt=self.main_prompt)
-            chain = StuffDocumentsChain(
-                llm_chain=llm_chain,
-                document_prompt=self.document_prompt,
-                document_variable_name="context"
+            # Format prompt with context
+            formatted_prompt = self.PROMPT.format(
+                context=context,
+                question=current_query
             )
             
-            result = chain.invoke({
-                "input_documents": documents,
-                "question": message
-            })
+            # Get response from LLM
+            response = self.llm.invoke(formatted_prompt)
+            return {"messages": [response]}
+
+        # Add nodes and edges to the graph
+        self.workflow.add_node("process_query", process_query)
+        self.workflow.add_edge(START, "process_query")
+        
+        # Compile the graph with memory
+        self.app = self.workflow.compile(checkpointer=self.memory)
+        
+        # Generate a unique thread ID for this conversation
+        self.thread_id = uuid.uuid4()
+        self.config = {"configurable": {"thread_id": self.thread_id}}    
+
+    async def get_context_and_response(self, query: str) -> AsyncGenerator[str, None]:
+        """Get context and generate streaming response"""
+        try:
+            # Get relevant documents
+            retriever = self.vector_store.as_retriever(
+                search_kwargs={"k": 3},
+                namespace=self.namespace
+            )
+            docs = retriever.get_relevant_documents(query)
+            context = "\n".join([doc.page_content for doc in docs])
             
-            # Add source information
-            sources = set(doc.metadata.get('source', 'Unknown') for doc in documents)
-            return f"{result['output_text']}\n\nSources: {', '.join(sources)}"
+            # Format prompt
+            formatted_prompt = self.PROMPT.format(
+                context=context,
+                question=query
+            )
+            
+            # Stream the response
+            async for chunk in self.llm.astream(formatted_prompt):
+                yield chunk
+                
+        except Exception as e:
+            yield f"Error: {str(e)}"
+
+    def clean_text(self, text: str) -> str:
+        """Clean and normalize extracted text"""
+        text = re.sub(r'\s+', ' ', text)
+        text = text.replace(' v ', 'v')
+        text = text.replace(' e ', 'e')
+        text = text.replace(' r ', 'r')
+        text = ' '.join(text.split())
+        return text
+
+    def process_pdf(self, pdf_path: str) -> Pinecone:
+        """Process PDF file with improved text extraction"""
+        try:
+            index = self.pinecone_client.Index(self.index_name)
+            stats = index.describe_index_stats()
+            
+            if self.namespace in stats.get('namespaces', {}):
+                print(f"Using existing document: {self.namespace}")
+                return Pinecone(
+                    index_name=self.index_name,
+                    embedding=self.embeddings,
+                    namespace=self.namespace
+                )
+            
+            with open(pdf_path, 'rb') as file:
+                pdf_reader = PdfReader(file)
+                text_parts = []
+                for page in pdf_reader.pages:
+                    text = page.extract_text()
+                    cleaned_text = self.clean_text(text)
+                    text_parts.append(cleaned_text)
+                
+                full_text = ' '.join(text_parts)
+                print(f"Extracted and cleaned text length: {len(full_text)} characters")
+                
+                doc = Document(page_content=full_text, metadata={"source": pdf_path})
+            
+            splits = self.text_splitter.split_documents([doc])
+            print(f"Created {len(splits)} text chunks")
+            
+            vector_store = Pinecone.from_documents(
+                documents=splits,
+                embedding=self.embeddings,
+                index_name=self.index_name,
+                namespace=self.namespace
+            )
+            
+            print(f"Successfully processed {len(splits)} sections from PDF")
+            return vector_store
             
         except Exception as e:
-            return f"Error generating response: {str(e)}"
+            raise Exception(f"Error processing PDF: {str(e)}")
 
-def create_interface(config: Config) -> gr.Blocks:
-    """Create and configure the Gradio interface"""
-    chatbot = ChatBot(config)
+async def run_chat_interface():
+    """Run the terminal-based chat interface with streaming support"""
+    PDF_PATH = "Allspark-ultimatum/Harsh_Shivhare/Conversational Data Query Assistant/Predicting_Sentiment_with_Traditional_ML_Technique__1725483289.pdf"
     
-    with gr.Blocks(title="Conversational Data Query Assistant") as interface:
-        gr.Markdown("# Conversational Data Query Assistant")
+    print("\n=== Welcome to Conversation Data Query Assistant ===")
+    print("Type 'quit' or 'exit' to end the conversation\n")
+    
+    bot = CustomerServiceBot(PDF_PATH)
+    
+    while True:
+        user_input = input("\nUser: ").strip()
         
-        with gr.Row():
-            file_input = gr.File(
-                label="Upload PDF or CSV file",
-                file_types=[".pdf", ".csv"]
-            )
-            upload_status = gr.Textbox(
-                label="Upload Status",
-                interactive=False
-            )
-        
-        chatbot_interface = gr.ChatInterface(
-            chatbot.respond,
-            chatbot=gr.Chatbot(height=400),
-            textbox=gr.Textbox(
-                placeholder="Ask a question about your document...",
-                container=False,
-                scale=7
-            )
-        )
-        
-        file_input.upload(
-            fn=chatbot.upload_file,
-            inputs=[file_input],
-            outputs=[upload_status]
-        )
-    
-    return interface
-
-def main():
-    # Load environment variables
-    load_dotenv()
-    
-    # Initialize configuration
-    config = Config(
-        GOOGLE_API_KEY=os.getenv("GOOGLE_API_KEY"),
-        PINECONE_API_KEY=os.getenv("PINECONE_API_KEY")
-    )
-    
-    # Validate configuration
-    if not config.GOOGLE_API_KEY or not config.PINECONE_API_KEY:
-        raise ValueError("Please set up your API keys in the .env file")
-    
-    # Create and launch interface
-    interface = create_interface(config)
-    interface.launch(share=True)
+        if user_input.lower() in ['quit', 'exit']:
+            print("\nAI: Thank you for chatting with me. Have a great day!")
+            break
+            
+        if user_input:
+            print("\nAI: ", end='', flush=True)
+            
+            try:
+                async for chunk in bot.get_context_and_response(user_input):
+                    print(chunk, end='', flush=True)
+                print()  # New line after response
+            except Exception as e:
+                print(f"\nAn error occurred: {str(e)}")
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(run_chat_interface())

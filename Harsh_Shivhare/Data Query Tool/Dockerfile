@@ -24,5 +24,5 @@ USER appuser
 CMD ["python", "main.py"]
 
 # Run in terminal by using this command
-# docker run -it -e GOOGLE_API_KEY=your_api_key_here article_abstract
+# docker run -e GOOGLE_API_KEY=your_api_key_here article_abstract
 
