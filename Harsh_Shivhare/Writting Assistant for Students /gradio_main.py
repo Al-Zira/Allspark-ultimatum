@@ -68,7 +68,7 @@ Topic or current work:
 
 What aspects would you like to improve?''')
 
-    chain = LLMChain(llm=llm, prompt=prompt, verbose=True)
+    chain = LLMChain(llm=llm, proSmpt=prompt, verbose=True)
     
     # Send the input parameters to the chain
     response = chain.invoke({

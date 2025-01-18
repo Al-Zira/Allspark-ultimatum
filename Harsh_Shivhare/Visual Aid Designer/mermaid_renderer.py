@@ -1,11 +1,11 @@
-import os
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from tempfile import NamedTemporaryFile
-from pathlib import Path
+from PIL import Image
+import os
 
 class MermaidRenderer:
     HTML_TEMPLATE = """
@@ -35,7 +35,7 @@ class MermaidRenderer:
     </script>
     <style>
         body {{ margin: 0; padding: 0; background: white; }}
-        .mermaid {{ background: white; padding: 20px; display: inline-block; max-width: 4d00px; }}
+        .mermaid {{ background: white; padding: 20px; display: inline-block; max-width: 4000px; }}
     </style>
 </head>
 <body>
@@ -51,8 +51,9 @@ class MermaidRenderer:
         chrome_options.add_argument("--headless")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--force-device-scale-factor=2")
         chrome_options.add_argument("--disable-gpu")
-        return webdriver.Chrome(options=chrome_options)
+        return webdriver.Chrome(executable_path='/usr/lib/chromium-browser/chromedriver', options=chrome_options)
 
     def render_diagram(self, mermaid_code, output_path):
         driver = None
@@ -69,11 +70,22 @@ class MermaidRenderer:
             wait = WebDriverWait(driver, 10)
             wait.until(EC.presence_of_element_located((By.CLASS_NAME, "mermaid")))
 
-            width = driver.execute_script("return document.querySelector('.mermaid').offsetWidth")
-            height = driver.execute_script("return document.querySelector('.mermaid').offsetHeight")
-            driver.set_window_size(width + 40, height + 200)
+            # Get the size of the mermaid div
+            diagram_element = driver.find_element(By.CLASS_NAME, "mermaid")
+            width = diagram_element.size['width']
+            height = diagram_element.size['height']
 
+            # Set window size to double the size for high resolution
+            driver.set_window_size(width * 2, height * 2)
+
+            # Take screenshot
             driver.save_screenshot(output_path)
+
+            # Resize the image to original size using Pillow
+            img = Image.open(output_path)
+            img = img.resize((width, height), Image.LANCZOS)
+            img.save(output_path)
+
             return True
 
         except Exception as e:
@@ -85,88 +97,3 @@ class MermaidRenderer:
                 driver.quit()
             if temp_file_path and os.path.exists(temp_file_path):
                 os.unlink(temp_file_path)
-
-
-if __name__ == "__main__":
-    mermaid_code = """
-    classDiagram
-    class Bank {
-        +String name
-        +String address
-        +List branches
-        +addBranch(Branch branch)
-        +removeBranch(Branch branch)
-    }
-
-    class Branch {
-        +String branchId
-        +String location
-        +Bank bank
-        +List employees
-        +List accounts
-        +addEmployee(Employee employee)
-        +removeEmployee(Employee employee)
-        +addAccount(Account account)
-        +removeAccount(Account account)
-    }
-
-    class Employee {
-        +String employeeId
-        +String name
-        +String position
-        +Branch branch
-        +assignToBranch(Branch branch)
-    }
-
-    class Customer {
-        +String customerId
-        +String name
-        +String address
-        +List accounts
-        +addAccount(Account account)
-        +removeAccount(Account account)
-    }
-
-    class Account {
-        +String accountNumber
-        +double balance
-        +Customer owner
-        +Transaction[] transactions
-        +deposit(double amount)
-        +withdraw(double amount)
-    }
-
-    class Transaction {
-        +String transactionId
-        +Date date
-        +double amount
-        +String type
-        +Account account
-    }
-    
-    class Loan {
-        +String loanId
-        +double amount
-        +double interestRate
-        +Branch branch
-        +Customer borrower
-    }
-
-    Bank "1" o-- "many" Branch : has
-    Branch "1" *-- "many" Account : contains
-    Branch "1" o-- "many" Employee : employs
-    Customer "1" *-- "many" Account : owns
-    Account "1" -- "many" Transaction : contains
-    Branch "1" *-- "many" Loan : processes
-    Customer "1" *-- "many" Loan : borrows
-
-    """
-
-    renderer = MermaidRenderer()
-    output_path = "mermaid_diagram.png"
-    success = renderer.render_diagram(mermaid_code, output_path)
-
-    if success:
-        print(f"Diagram successfully generated at: {output_path}")
-    else:
-        print("Failed to generate diagram")

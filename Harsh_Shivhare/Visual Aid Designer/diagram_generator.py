@@ -21,8 +21,9 @@ def get_diagram_prompt(diagram_type):
     Returns the appropriate prompt template based on diagram type with enhanced instructions.
     """
     base_prompt = """
-    You are an expert in creating detailed and professional Mermaid.js diagrams. Your task is to generate a comprehensive, 
+    You are an expert in creating detailed and professional Mermaid.js diagrams code. Your task is to generate a comprehensive, 
     working Mermaid diagram that includes all relevant components, relationships, and proper syntax.
+    PLEASE FOCUS ON SYNTAX OF MERMAID DIAGRAM CODE.
 
     Guidelines for ALL diagrams:
     1. Include detailed labels and descriptions
