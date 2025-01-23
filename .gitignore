@@ -199,6 +199,18 @@ cython_debug/
 
 
 .idx/dev.nix
-Harsh_Shivhare/Visual Aid Designer/Dockerfile
-Harsh_Shivhare/Visual Aid Designer/.dockerignore
+Harsh_Shivhare/Visual Aid Designer1/Dockerfile
+Harsh_Shivhare/Visual Aid Designer1/.dockerignore
 Harsh_Shivhare/Language Learning Assistant/.gradio/cached_examples/23/log.csv
+.gitignore
+Harsh_Shivhare/Visual Aid Designer 1/.gradio/certificate.pem
+Harsh_Shivhare/Visual Aid Designer 1/sequence-diagram_diagram.png
+Harsh_Shivhare/Visual Aid Designer 1/requirements.txt
+Harsh_Shivhare/Visual Aid Designer 1/mind-map-diagram_diagram.png
+Harsh_Shivhare/Visual Aid Designer 1/mermaid_renderer.py
+Harsh_Shivhare/Visual Aid Designer 1/mermaid_diagram.png
+Harsh_Shivhare/Visual Aid Designer 1/main.py
+Harsh_Shivhare/Visual Aid Designer 1/gradio_app.py
+Harsh_Shivhare/Visual Aid Designer 1/flowchart-diagram_diagram.png
+Harsh_Shivhare/Visual Aid Designer 1/Dockerfile
+Harsh_Shivhare/Visual Aid Designer 1/diagram_generator.py

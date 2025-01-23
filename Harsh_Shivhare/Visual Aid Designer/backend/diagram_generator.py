@@ -555,4 +555,3 @@ if __name__ == "__main__":
         print("Generated Mermaid.js Code:\n", mermaid_code)
     except Exception as e:
         print(f"Error: {e}")
-

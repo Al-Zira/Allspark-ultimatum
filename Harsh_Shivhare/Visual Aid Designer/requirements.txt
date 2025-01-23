@@ -1,7 +1,0 @@
-selenium
-Pillow
-langchain-google-genai
-langchain_community
-langchain
-python-dotenv
-langchain_core
