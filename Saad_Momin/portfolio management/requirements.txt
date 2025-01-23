@@ -1,0 +1,18 @@
+fastapi>=0.68.0
+uvicorn>=0.15.0
+yfinance
+numpy
+pandas
+python-dotenv
+google-generativeai
+requests
+plotly
+scipy
+scikit-learn
+ta  # Technical Analysis library
+textblob  # Sentiment Analysis
+beautifulsoup4  # Web Scraping
+pandas-ta  # Advanced Technical Analysis
+pydantic>=1.8.0
+python-binance  # Binance API for crypto data
+scipy  # For portfolio optimization
