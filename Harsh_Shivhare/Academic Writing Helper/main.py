@@ -150,9 +150,9 @@ class AcademicWritingAssistant:
     def __init__(self):
         """Initialize the Academic Writing Assistant"""
         load_dotenv()
-        self.api_key = os.environ('GOOGLE_API_KEY')
+        self.api_key = os.environ['GOOGLE_API_KEY']
         self.llm = GoogleGenerativeAI(
-            model='gemini-pro',
+            model='gemini-2.0-flash',
             temperature=0.9,
             api_key=self.api_key
         )

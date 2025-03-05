@@ -135,7 +135,7 @@ load_dotenv()
 api_key = os.getenv('GOOGLE_API_KEY')
 
 # Initialize components
-abstract_generator = AbstractGenerator(model='gemini-pro', temperature=0.9, api_key=api_key)
+abstract_generator = AbstractGenerator(model='gemini-2.0-flash', temperature=0.9, api_key=api_key)
 article_processor = ArticleProcessor(abstract_generator=abstract_generator)
 
 # Example usage

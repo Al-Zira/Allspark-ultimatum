@@ -32,7 +32,7 @@ class BlogGenerator:
     def _initialize_llm(self) -> GoogleGenerativeAI:
         """Initialize the language model."""
         return GoogleGenerativeAI(
-            model='gemini-pro',
+            model='gemini-2.0-flash',
             temperature=0.9,
             google_api_key=self.api_key
         )
