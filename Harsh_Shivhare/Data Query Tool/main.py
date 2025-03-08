@@ -19,7 +19,7 @@ class Config:
     """Configuration class for API keys and database settings"""
     GOOGLE_API_KEY: str
     DB_CONNECTION_STRING: str
-    LLM_MODEL: str = 'gemini-pro'
+    LLM_MODEL: str = 'gemini-2.0-flash'
     MAX_ROWS: int = 1000  # Limit for safety
 
 class StreamPrinter:
@@ -99,22 +99,51 @@ class QueryBot:
         """Initialize prompt templates"""
         self.sql_generation_prompt = PromptTemplate(
             template="""
-            You are a MySQL query generator. Using the following database schema:
-            {schema}
-            
-            Generate a SQL query to answer this question: {question}
-            
-            Rules:
-            1. Return ONLY the SQL query without any markdown formatting or explanation
-            2. Use only SELECT statements
-            3. Include essential columns only
-            4. Always include LIMIT clause
-            5. Use proper spacing between SQL keywords
-            6. Use MySQL date functions (DATE_FORMAT, MONTH, YEAR) instead of SQLite's strftime
-            7. For monthly trends, use DATE_FORMAT(date_column, '%%Y-%%m')
-            
-            Example format for monthly trends:
-            SELECT DATE_FORMAT(sale_date, '%%Y-%%m') as month, SUM(quantity) as total_quantity FROM sales GROUP BY month ORDER BY month LIMIT 12;
+            You are a versatile query generator for various databases. Using the following database schema:
+{schema}
+
+Generate a query to answer this question: {question}
+
+Rules:
+1. Return ONLY the query without any markdown formatting or explanation.
+2. Use only SELECT (or equivalent) statements for relational databases and aggregation pipelines for MongoDB.
+3. Include essential columns/fields only.
+4. Always include a LIMIT clause where applicable.
+5. Use appropriate date functions or operators for the specific database:
+   - MySQL: DATE_FORMAT, MONTH, YEAR
+   - PostgreSQL: TO_CHAR, EXTRACT
+   - MongoDB: $dateToString, $month, $year
+6. For monthly trends:
+   - MySQL: DATE_FORMAT(date_column, '%%Y-%%m')
+   - PostgreSQL: TO_CHAR(date_column, 'YYYY-MM')
+   - MongoDB: {$dateToString: {format: "%Y-%m", date: "$date_field"}}
+
+Example format for monthly trends:
+- MySQL/PostgreSQL:
+SELECT TO_CHAR(sale_date, 'YYYY-MM') AS month, SUM(quantity) AS total_quantity 
+FROM sales 
+GROUP BY month 
+ORDER BY month 
+LIMIT 12;
+
+- MongoDB:
+db.sales.aggregate([
+    {
+        $project: {
+            month: { $dateToString: { format: "%Y-%m", date: "$sale_date" } },
+            quantity: 1
+        }
+    },
+    {
+        $group: {
+            _id: "$month",
+            total_quantity: { $sum: "$quantity" }
+        }
+    },
+    { $sort: { _id: 1 } },
+    { $limit: 12 }
+]);
+
             """,
             input_variables=["schema", "question"]
         )

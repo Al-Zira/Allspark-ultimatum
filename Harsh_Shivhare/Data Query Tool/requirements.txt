@@ -6,3 +6,4 @@ langchain_google_genai
 pymysql
 cryptography
 pandas
+psycopg2-binary
