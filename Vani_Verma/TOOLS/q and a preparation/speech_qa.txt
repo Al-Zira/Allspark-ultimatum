@@ -1,0 +1,46 @@
+```json
+{
+  "questions": [
+    {
+      "question": "What is the central theme of this year's budget, and how does it relate to India's future?",
+      "answer": "The central theme is \"Investing in People, Economy, and Innovation.\"  This theme serves as a roadmap for a developed India and forms the blueprint for the country's future, emphasizing not just infrastructure and industries, but also the crucial role of human capital development."
+    },
+    {
+      "question": "Why is investment in capacity building and talent nurturing considered crucial for India's progress?",
+      "answer": "Capacity building and talent nurturing are considered foundational for the next phase of India's development. They are essential not only for the overall economic success of the country but also for the success of individual organizations."
+    },
+    {
+      "question": "What are the three pillars supporting the vision of investment in people?",
+      "answer": "The three pillars are education, skills development, and healthcare.  These areas are seen as crucial for developing a well-rounded and productive workforce."
+    },
+    {
+      "question": "What specific initiatives are mentioned regarding the transformation of India's education system?",
+      "answer": "Several initiatives are highlighted, including the National Education Policy, expansion of IITs, integration of technology and AI in education, digitization of textbooks, and providing learning materials in 22 Indian languages. These efforts aim to modernize the education system and align it with 21st-century needs."
+    },
+    {
+      "question": "What steps have been taken to enhance skill development and training for youth?",
+      "answer": "The government has provided skill training to over 3 crore youth since 2014.  Plans include upgrading 1,000 ITI institutes and creating 5 centers of excellence.  The goal is to align training with industry needs, leveraging global expertise to ensure global competitiveness."
+    },
+    {
+      "question": "What is the role of industry and academia in skill development, and how can they collaborate effectively?",
+      "answer": "Industry and academia must understand and fulfill each other's needs.  They should work together to provide youth with opportunities to keep pace with the rapidly changing world, gain practical experience, and access platforms for practical learning."
+    },
+    {
+      "question": "What is the PM-internship scheme, and what is its objective?",
+      "answer": "The PM-internship scheme aims to provide youth with new opportunities and practical skills. The government is encouraging maximum participation from industries of all scales to make this scheme successful."
+    },
+    {
+      "question": "How does the budget address the need for practical learning and exposure for youth?",
+      "answer": "The budget emphasizes practical learning through initiatives like the PM-internship scheme and by encouraging collaboration between industry and academia. This collaboration is designed to provide youth with real-world experience and exposure to current industry practices."
+    },
+    {
+      "question": "What is the significance of digitizing textbooks and providing learning materials in multiple Indian languages?",
+      "answer": "Digitizing textbooks and providing learning materials in 22 Indian languages promotes accessibility and inclusivity in education, catering to a wider range of learners and promoting education in regional languages."
+    },
+    {
+      "question": "Why does the speaker emphasize the importance of stakeholders coming together for these initiatives?",
+      "answer": "The speaker emphasizes the need for all stakeholders – government, industry, academia, and individuals – to collaborate and contribute to these initiatives.  This collective effort is deemed essential for the success of both individual organizations and the nation as a whole."
+  }
+]
+}
+```

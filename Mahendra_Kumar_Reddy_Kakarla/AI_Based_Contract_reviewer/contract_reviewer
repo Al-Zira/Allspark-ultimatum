@@ -1,0 +1,81 @@
+import gradio as gr
+import os
+import sys
+
+script_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+
+sys.path.append(script_path)
+
+from geminiModel import gemini_model, gemini_flas_model  # Assuming you have the Gemini 1.5 Flash API or library
+from PyPDF2 import PdfReader
+import docx
+
+# Function to read content from uploaded files
+def read_document(file):
+    if file.name.endswith(".pdf") or file.name.endswith(".PDF"):
+        # Extract text from PDF
+        reader = PdfReader(file)
+        content = "\n".join([page.extract_text() for page in reader.pages])
+    elif file.name.endswith(".docx"):
+        # Extract text from DOCX
+        doc = docx.Document(file.name)
+        content = "\n".join([para.text for para in doc.paragraphs])
+    else:
+        content = "Unsupported file format. Please upload a PDF or DOCX."
+    return content
+
+# Function to analyze the document and generate a downloadable file
+def analyze_document(file):
+    content = read_document(file)
+    if "Unsupported file format" in content:
+        return content, "No content to analyze.", None
+    
+    prompt = f"""
+    contract:{content}
+    Reviews above legal contract and highlights areas that require attention or possible negotiation points.
+    
+    1. Clauses that may be unfavorable to the user.
+    2. Clauses that may be ambiguous or open to interpretation.
+    3. Clauses that may have legal implications or risks.
+    4. Clauses that may be outdated or irrelevant in the current legal landscape.
+    5. Any other areas that may require attention or negotiation.
+    6. Summarize the main points of the contract in a few sentences.
+
+    Don't give a deep explanation of each above point; just give a short summary of each point and the specific clause that falls under that point.
+
+    Please provide a detailed analysis in markdown format.
+    """
+    
+    # Assume GeminiFlash provides a method `review_contract`
+    gemini = gemini_flas_model()  # Instantiate the model
+    result = gemini.generate_content(prompt)  # Analyze the content
+    
+    # Save the result to a file
+    output_file = "analysis_result.md"
+    with open(output_file, "w") as f:
+        f.write(result.text)
+    
+    return content, result.text, output_file  # Add output file for download
+
+# Gradio UI
+with gr.Blocks() as demo:
+    gr.Markdown("# Legal Document Review")
+    gr.Markdown(
+        """
+        Upload your legal documents (PDF or DOCX), and this tool will review them to highlight 
+        areas requiring attention or negotiation points. On the left, you'll see the document 
+        preview, and on the right, you'll get a detailed analysis in Markdown format.
+        """
+    )
+    
+    with gr.Row():
+        with gr.Column():
+            file_input = gr.File(label="Upload Legal Document", file_types=[".pdf", ".PDF",".docx"])
+            document_preview = gr.Textbox(label="Document Preview", lines=20, interactive=False)
+        with gr.Column():
+            analysis_output = gr.Markdown(label="Analysis Results")
+            download_button = gr.File(label="Download Analysis")
+    
+    file_input.change(analyze_document, inputs=file_input, outputs=[document_preview, analysis_output, download_button])
+
+demo.launch()

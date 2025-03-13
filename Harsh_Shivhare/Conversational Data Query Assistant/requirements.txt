@@ -1,0 +1,14 @@
+langchain_community
+langchain
+python-dotenv
+langchain_core
+langchain_google_genai
+langgraph
+PyPDF2
+pandas
+pinecone-client
+# langchain-pinecone
+langchain-pinecone>=0.0.2
+simsimd>=5.0.0
+numpy
+sentence-transformers

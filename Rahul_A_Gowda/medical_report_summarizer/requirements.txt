@@ -1,0 +1,8 @@
+pypdf
+uuid
+docx2txt
+langchain_huggingface
+python-dotenv
+langchain_community
+langchain_core
+langchain_google_genai

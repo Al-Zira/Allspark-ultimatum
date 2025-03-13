@@ -1,0 +1,6 @@
+pathlib
+langchain_community
+langchain
+langchain_google_genai
+python-dotenv
+pypdf

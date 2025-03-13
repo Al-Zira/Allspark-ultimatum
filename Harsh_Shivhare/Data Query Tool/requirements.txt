@@ -1,0 +1,9 @@
+langchain_community
+langchain
+python-dotenv
+langchain_core
+langchain_google_genai
+pymysql
+cryptography
+pandas
+psycopg2-binary

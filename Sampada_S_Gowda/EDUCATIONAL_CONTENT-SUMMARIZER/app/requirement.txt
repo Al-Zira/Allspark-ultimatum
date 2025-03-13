@@ -1,0 +1,9 @@
+tensorflow
+tensorflow-hub
+pytesseract
+pillow
+pdf2image
+pypdf2
+python-dotenv
+numpy
+google-generativeai

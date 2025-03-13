@@ -1,0 +1,61 @@
+**1. Title of Learning Path**: Computer Vision Engineer Career Path
+
+**2. Steps to Learn the Path**:
+
+**Step 1: Foundations of Computer Vision**
+
+* **Title**: Introduction to Computer Vision
+* **Description**: This step will provide a comprehensive overview of the fundamental concepts and techniques involved in computer vision.
+* **Sub-steps**:
+    * **Understanding Image Formation**:
+        * Resources:
+            * [Computer Vision: Algorithms and Applications](https://www.coursera.org/specializations/computer-vision-algorithms-applications)
+            * [Introduction to Computer Vision](https://www.coursera.org/learn/intro-computer-vision)
+    * **Image Processing and Analysis**:
+        * Resources:
+            * [Python for Image Processing](https://www.coursera.org/specializations/python-image-processing)
+            * [Image Processing with OpenCV using Python](https://www.coursera.org/specializations/image-processing)
+
+**Step 2: Deep Learning for Computer Vision**
+
+* **Title**: Applications of Deep Learning in Computer Vision
+* **Description**: This step will focus on understanding how deep learning is used in computer vision tasks, such as image classification, object detection, and segmentation.
+* **Sub-steps**:
+    * **Convolutional Neural Networks (CNNs)**:
+        * Resources:
+            * [Deep Learning Specialization](https://www.coursera.org/specializations/deep-learning)
+            * [Convolutional Neural Networks for Visual Recognition](https://www.coursera.org/specializations/convolutional-neural-networks)
+    * **Transfer Learning with Pre-trained Models**:
+        * Resources:
+            * [Transfer Learning with TensorFlow](https://www.coursera.org/specializations/tensorflow-transfer-learning)
+            * [Transfer Learning for Computer Vision](https://www.udacity.com/school-of-ai/course/transfer-learning-for-computer-vision--ud120)
+
+**Step 3: Advanced Computer Vision Techniques**
+
+* **Title**: Object Detection, Segmentation, and Tracking
+* **Description**: This step will cover advanced topics in computer vision, such as object detection, segmentation, and tracking using deep learning and computer vision algorithms.
+* **Sub-steps**:
+    * **Object Detection**:
+        * Resources:
+            * [Object Detection with YOLO](https://www.coursera.org/specializations/object-detection-yolo)
+            * [Object Detection with TensorFlow Object Detection API](https://www.tensorflow.org/tutorials/computer_vision/object_detection)
+    * **Image Segmentation**:
+        * Resources:
+            * [Image Segmentation with Deep Learning](https://www.coursera.org/specializations/image-segmentation)
+            * [Semantic Segmentation with Deep Learning](https://www.udacity.com/school-of-ai/course/semantic-segmentation-with-deep-learning--ud182)
+    * **Object Tracking**:
+        * Resources:
+            * [Object Tracking with OpenCV](https://opencv.org/tutorials/tracking/tracking-overview/tracking-overview.html)
+            * [Object Tracking with Deep Sort](https://github.com/nwojke/deep_sort)
+
+**Step 4: Portfolio and Projects**
+
+* **Title**: Hands-on Experience with Computer Vision
+* **Description**: This step will involve building hands-on projects in computer vision to demonstrate your skills and showcase your capabilities to potential employers.
+* **Sub-steps**:
+    * **Build a Computer Vision Project**:
+        * **Example 1**: Building an Image Classifier Using CNNs
+        * **Example 2**: Developing an Object Detection System
+    * **Create a Portfolio of Projects**:
+        * **Example 1**: Showcase your projects on GitHub or personal website
+        * **Example 2**: Contribute to open-source computer vision projects

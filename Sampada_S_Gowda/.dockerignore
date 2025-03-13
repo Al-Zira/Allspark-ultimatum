@@ -1,0 +1,30 @@
+# Ignore unnecessary files in the Docker build context
+
+# Ignore Python cache and compiled files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore virtual environments
+venv/
+env/
+*.venv
+
+# Ignore system and editor config files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Ignore logs and environment variables
+*.log
+.env
+
+# Ignore build and package directories
+build/
+dist/
+*.egg-info/
+
+# Ignore uploaded files
+uploads/
