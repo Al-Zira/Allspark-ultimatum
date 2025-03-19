@@ -1,0 +1,7 @@
+google-generativeai
+transformers
+ffmpeg
+python-dotenv
+yt_dlp
+torch 
+accelerate

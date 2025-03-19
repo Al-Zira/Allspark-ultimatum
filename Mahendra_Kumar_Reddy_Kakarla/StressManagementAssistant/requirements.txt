@@ -1,0 +1,4 @@
+google-generativeai
+pyyaml
+pillow
+python-dotenv
