@@ -1,0 +1,9 @@
+PyPDF2
+python-docx
+google-generativeai
+pyyaml
+asyncio
+langchain
+langchain_core
+langchain_google_genai
+python-dotenv
